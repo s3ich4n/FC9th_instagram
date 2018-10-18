@@ -10,23 +10,34 @@ class Post(models.Model):
         on_delete=models.CASCADE,
     )
 
-    photo = models.ImageField(upload_to='post')
+    photo = models.ImageField(
+        '사진',
+        upload_to='post'
+    )
 
 
 class Comment(models.Model):
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
+        verbose_name='포스트',
     )
     author = models.ForeignKey(
         'members.User',
         on_delete=models.CASCADE,
+        verbose_name='작성자',
     )
     contents = models.TextField()
     # 해시태그: 여러개
     hashtags = models.ManyToManyField(
         'Hashtags',
+        blank=True,
+        verbose_name='해시태그 목록',
     )
+
+    class Meta:
+        verbose_name = '댓글'
+        verbose_name_plural = f'{verbose_name} 목록'
     # 멘션을 달면 나와 남이 바로연계됨.
     # mentions = models.ManyToManyField(
     #     'User',

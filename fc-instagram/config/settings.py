@@ -31,8 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'members',
-    'posts',
+    'members.apps.MembersConfig',
+    # 이런 방식으로 앱 추가하는것이 훨씬 권장된다!
+    'posts.apps.PostsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
 

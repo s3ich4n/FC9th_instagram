@@ -4,6 +4,7 @@ from django.db import models
 class User(models.Model):
     # profile_image = models
     username = models.CharField(
+        '아이디',
         max_length=32,
     )
     img_profile = models.ImageField(

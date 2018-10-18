@@ -1,3 +1,6 @@
+# Media folder(user-uploaded file)
+/.media
+
 
 # Created by https://www.gitignore.io/api/macos,django,virtualenv,pycharm+all
 

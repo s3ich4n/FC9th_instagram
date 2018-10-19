@@ -17,7 +17,7 @@ class Post(models.Model):
 
     photo = models.ImageField(
         '사진',
-        upload_to='post'
+        upload_to='post',
     )
 
     class Meta:

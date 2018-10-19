@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>post lists</title>
-</head>
-<body>
-    <h1>뭘봐</h1>
-</body>
-</html>
+{% extends 'common/base.html' %}
+
+<h1>포스트 리스트</h1>
+
+{% block content %}
+    {% for post in posts %}
+        <h3><img src="{{ post.photo.url }}" alt=""></h3>
+    {% endfor %}
+{% endblock %}

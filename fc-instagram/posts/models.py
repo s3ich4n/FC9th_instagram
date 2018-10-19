@@ -1,10 +1,15 @@
 # from django.contrib.auth.models import AbstractUser
+import datetime
+
 from django.db import models
 
 # https://github.com/matthewwithanm/django-imagekit
 
 
 class Post(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
     author = models.ForeignKey(
         'members.User',
         on_delete=models.CASCADE,
@@ -14,6 +19,11 @@ class Post(models.Model):
         '사진',
         upload_to='post'
     )
+
+    class Meta:
+        verbose_name = '포스트'
+        verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-pk',)
 
 
 class Comment(models.Model):

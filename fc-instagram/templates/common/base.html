@@ -1,11 +1,38 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>베이스</title>
+    <title>짭스타그램</title>
+    <!-- 브라우저별 기본 CSS 값 세팅-->
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+
 </head>
 <body>
-    {% block content %}
+    <div id="wrapper">
+        <nav class="navbar navbar-expand-sm bg-light">
+            <a href="#" class="navbar-brand">짭스타그램</a>
+            <form action="#" class="form-inline ml-md-auto">
+                <input type="text" class="form-control" placeholder="검색">
+            </form>
+            <ul class="navbar-nav ml-md-auto">
+                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">a</a></li>
+                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">b</a></li>
+                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">c</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script>
+        var a = 3;
+    </script>
+    <script src=""></script>
+    {% block script %}
     {% endblock %}
 </body>
 </html>

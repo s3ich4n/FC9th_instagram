@@ -30,6 +30,12 @@ MEDIA_URL = '/media/'
 # 있으면 해당 파일을 response
 STATIC_URL = '/static/'
 
+# 정적파일 검색 경로 목록
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 

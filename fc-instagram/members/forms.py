@@ -20,7 +20,7 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     username = forms.CharField(
-        widget=forms.PasswordInput(
+        widget=forms.TextInput(
             # html 위젯 속성
             # see also: http://getbootstrap.com/docs/4.1/components/forms/#overview
             attrs={

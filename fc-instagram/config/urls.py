@@ -22,6 +22,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('posts.urls')),
+    path('login/', include('members.urls')),
     # path('media/<path:path>', views.media_serve)
 ]
 

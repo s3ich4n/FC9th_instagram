@@ -1,0 +1,27 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+    화면분할은 12칸씩 됨.
+    lg: large 4칸먹고 4부터
+    md: middle 6칸먹고 3부터
+    sm: small 8칸먹고 2부터
+    <div class="col
+                col-lg-4 offset-lg-4
+                col-md-6 offset-md-3
+                col-sm-8 offset-sm-2">
+        <h1 class="text-center">로그인</h1>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for = "{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                </div>
+                {{ field }}
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">로그인</button>
+        </form>
+    </div>
+{% endblock %}

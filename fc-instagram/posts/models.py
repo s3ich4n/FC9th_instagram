@@ -2,6 +2,7 @@
 import datetime
 
 from django.db import models
+from django.conf import settings
 
 # https://github.com/matthewwithanm/django-imagekit
 
@@ -11,7 +12,10 @@ class Post(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     author = models.ForeignKey(
-        'members.User',
+        # Django가 기본적으로 제공하는 User 클래스
+        # 'appname.modelname'
+        # 'members.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
 
@@ -33,7 +37,8 @@ class Comment(models.Model):
         verbose_name='포스트',
     )
     author = models.ForeignKey(
-        'members.User',
+        settings.AUTH_USER_MODEL,
+        # 'members.User',
         on_delete=models.CASCADE,
         verbose_name='작성자',
     )

@@ -12,12 +12,12 @@
 <body>
     <div id="wrapper">
         <nav class="navbar navbar-expand-sm bg-light">
-            <a href="#" class="navbar-brand">짭스타그램</a>
+            <a href="{% url 'post_list' %}" class="navbar-brand">짭스타그램</a>
             <form action="#" class="form-inline ml-md-auto">
                 <input type="text" class="form-control" placeholder="검색">
             </form>
             <ul class="navbar-nav ml-md-auto">
-                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">a</a></li>
+                <li class="nav-item"><a href="{% url 'post_create' %}" class="btn btn-outline-secondary">Add post</a></li>
                 <li class="nav-item"><a href="#" class="btn btn-outline-secondary">b</a></li>
                 <li class="nav-item"><a href="#" class="btn btn-outline-secondary">c</a></li>
             </ul>

@@ -4,6 +4,7 @@
 
 {% block content %}
     {% for post in posts %}
+        {{ post.author }}
         <h3><img src="{{ post.photo.url }}" alt=""></h3>
     {% endfor %}
 {% endblock %}

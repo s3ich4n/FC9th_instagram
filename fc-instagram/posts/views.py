@@ -28,7 +28,7 @@ def post_create(request):
     template = get_template('posts/post_create.html')
 
 
-    #로그인 확인 로직
+    # 로그인 확인 로직
     pass
     if request.method == 'POST' and request.FILES['uploaded_image']:
         uploaded = request.FILES['uploaded_image']
@@ -50,12 +50,9 @@ def post_create(request):
         })
     else:
         if request.user.is_authenticated:
+            # reverse 링크가 안걸어져있음
             form = UploadFileForm()
             return HttpResponse(template.render({'form': form}, request))
         else:
-            pass
-            # redirect('posts:post_list')
-
-
-
-
+            # HTTP response를 보내려면?
+            return redirect('posts:post_list')

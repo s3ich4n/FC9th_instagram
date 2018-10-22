@@ -12,14 +12,31 @@
 <body>
     <div id="wrapper">
         <nav class="navbar navbar-expand-sm bg-light">
-            <a href="{% url 'post_list' %}" class="navbar-brand">짭스타그램</a>
+            <a href="{% url 'posts:post_list' %}" class="navbar-brand">짭스타그램</a>
             <form action="#" class="form-inline ml-md-auto">
                 <input type="text" class="form-control" placeholder="검색">
             </form>
             <ul class="navbar-nav ml-md-auto">
-                <li class="nav-item"><a href="{% url 'post_create' %}" class="btn btn-outline-secondary">Add post</a></li>
-                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">b</a></li>
-                <li class="nav-item"><a href="#" class="btn btn-outline-secondary">c</a></li>
+                <li class="nav-item">
+                    <a href="#" class="btn btn-outline-secondary">
+                        {% if user.is_authenticated %}
+                            {{ user.username }}의 프로필
+                        {% else %}
+                            로그인 해주세요!
+                        {% endif %}
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a href="{% url 'posts:post_create' %}" class="btn btn-outline-secondary">포스트하기</a></li>
+                <form action="{% url 'members:logout_view' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="btn btn-outline-secondary">로그아웃</button>
+                </form>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'members:login_view' %}" class="btn btn-outline-secondary">로그인</a></li>
+                <li class="nav-item"><a href="{% url 'members:register_view' %}" class="btn btn-outline-secondary">회원가입</a></li>
+                {% endif %}
             </ul>
         </nav>
 
@@ -30,6 +47,7 @@
     </div>
     <script>
         var a = 3;
+        alert('ding!')
     </script>
     <script src=""></script>
     {% block script %}

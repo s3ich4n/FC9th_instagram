@@ -48,28 +48,20 @@ def logout_view(request):
 
 def register_view(request):
     template = get_template('members/register.html')
-    context = {
-        'form': RegisterForm(),
-    }
+    context = {}
 
+    # TODO: 입력값에 대한 유효성 검증
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        password_confirm = request.POST['password_confirm']
+        form = RegisterForm(request.POST)
 
-        # 이렇게 짜야 exists로 바로 있는지없는지 테스트함!
-        if User.objects.filter(username=username).exists():
-            context['error'] = f'사용자명 {username}은 이 이미 있음.'
-        elif password != password_confirm:
-            context['error'] = f'비번 확인하셈'
-        else:
+        if form.is_valid():
             user = User.objects.create_user(
-                username=username,
-                password=password,
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
             )
-            # 중복 회원가입!
-            # user.save()
             login(request, user)
             return redirect('posts:post_list')
-
-    return HttpResponse(template.render(context, request))
+    else:
+        form = RegisterForm()
+        context['form'] = form
+        return HttpResponse(template.render(context, request))

@@ -1,3 +1,9 @@
+from django.shortcuts import redirect
+
+
+def index(request):
+    return redirect('posts:post_list')
+
 # import os
 #
 # from django.conf import settings

@@ -17,6 +17,7 @@ class Post(models.Model):
         # 'members.User',
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        verbose_name='작성자',
     )
 
     photo = models.ImageField(

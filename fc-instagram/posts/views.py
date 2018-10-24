@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -14,7 +15,9 @@ def post_list(request):
     posts = Post.objects.all()
     template = get_template('posts/post_list.html')
 
-    context = {'posts': posts}
+    context = {
+        'posts': posts,
+    }
     return HttpResponse(template.render(context, request))
 
 
@@ -23,10 +26,10 @@ def post_list(request):
 # Post.objects.all() 이기 때문에 못 불러오는데,
 # 유저 로그인한 시점에서 이걸 하면 저걸 쓰고도 불러오게 하고싶다
 # 그렇다면, 로그인 구현+디비추가 까지 같이 해야하나?
+@login_required
 def post_create(request):
 
     template = get_template('posts/post_create.html')
-
 
     # 로그인 확인 로직
     pass

@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import Post
+
 
 class UploadFileForm(forms.Form):
     '''
@@ -24,3 +26,10 @@ class UploadFileForm(forms.Form):
             }
         )
     )
+
+    def save(self, **kwargs):
+        post = Post.objects.create(
+            photo=self.cleaned_data['photo'],
+            **kwargs,
+        )
+        return post

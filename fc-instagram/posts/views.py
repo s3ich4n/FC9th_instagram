@@ -28,34 +28,25 @@ def post_list(request):
 # 그렇다면, 로그인 구현+디비추가 까지 같이 해야하나?
 @login_required
 def post_create(request):
-
     template = get_template('posts/post_create.html')
+    context = {}
 
     # 로그인 확인 로직
-    pass
-    if request.method == 'POST' and request.FILES['uploaded_image']:
-        uploaded = request.FILES['uploaded_image']
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded.name, uploaded)
-        uploaded_file_url = fs.url(filename)
-        # SessionMiddleware
-        # AuthenticationMiddleware
-        #   를 통해서 request의 user 속성에
-        #   해당 사용자 인스턴스가 할당
-        post = Post(
-            author=request.user,
-            photo=request.FILES['uploaded_image'],
-        )
-        post.save()
-
-        return render(request, 'posts/post_create.html', {
-            'uploaded_file_url': uploaded_file_url
-        })
-    else:
-        if request.user.is_authenticated:
-            # reverse 링크가 안걸어져있음
-            form = UploadFileForm()
-            return HttpResponse(template.render({'form': form}, request))
-        else:
-            # HTTP response를 보내려면?
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        # request.FILES에 form에서 보낸 파일객체가 들어있음
+        # 새로운 Post를 생성한다.
+        #  author는 User.objects.first()
+        #  photo는 request.FILES에 있는 내용을 적절히 꺼내서 쓴다
+        # 완료된 후 posts:post_list로 redirect
+        if form.is_valid():
+            form.save(author=request.user)
             return redirect('posts:post_list')
+
+    else:
+        # GET으로 오면 빈 Form 인스턴스를 context에 담아 전달.
+        # Template에서는 'form'키로 Form 인스턴스 속성을 사용함.
+        form = UploadFileForm()
+
+    context['form'] = form
+    return HttpResponse(template.render(context, render))

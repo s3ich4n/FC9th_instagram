@@ -34,6 +34,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# login_required 데코레이터에 의해 로그인 페이지로 이동해야할 때,
+# 그 이동할 URL 또는 URL 패턴 이름
+LOGIN_URL = 'members:login_view'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Quick-start development settings - unsuitable for production

@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 
 
 class LoginForm(forms.Form):
@@ -42,4 +43,18 @@ class RegisterForm(forms.Form):
             }
         )
     )
+
+    # clean_<fieldname>() 형태의 메소드
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        if User.objects.filter(usernam=data).exists():
+            raise forms.ValidationError('이미 사용중인 사용자명 입니다.')
+        return data
+
+    def clean(self):
+        super().clean()
+        password = self.cleaned_data.get('password')
+        password_confirm = self.cleaned_data.get('password_confirm')
+        if password != password_confirm:
+            raise forms.ValidationError('비밀번호 값이 서로 일치하지 않습니다.')
 

@@ -1,10 +1,36 @@
 {% extends 'common/base.html' %}
 
-<h1>포스트 리스트</h1>
+
 
 {% block content %}
+<div>
+    <h1 class="text-center">포스트 리스트</h1>
     {% for post in posts %}
-        {{ post.author }}
-        <h3><img src="{{ post.photo.url }}" alt=""></h3>
+        <div class="col col-lg-4 offset-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    {{ post.author }}
+                </div>
+                <div class="card-body">
+                    <img src="{{ post.photo.url }}" alt="">
+                    <ul class="list-unstyled">
+                        {% for comment in post.comments.all %}
+                            <li>
+                                <strong>{{ comment.author }}</strong>
+                                <span>{{ comment.content }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'posts:comment_create' post_pk=post.pk %}" method="POST">
+                        {% csrf_token %}
+                        {{ comment_form.contents }}
+                        <button class="btn btn-primary btn-block" type="submit">작성하기</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     {% endfor %}
+</div>
 {% endblock %}

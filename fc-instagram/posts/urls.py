@@ -10,4 +10,7 @@ urlpatterns = [
     path('upload/',
          views.post_create,
          name='post_create'),
+    path('<int:post_pk>/comments/create/',
+         views.comment_create,
+         name='comment_create'),
 ]

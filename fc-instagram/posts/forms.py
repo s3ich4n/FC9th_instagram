@@ -32,4 +32,32 @@ class UploadFileForm(forms.Form):
             photo=self.cleaned_data['photo'],
             **kwargs,
         )
+
+        # 1. comment 관련
+        comment_content = self.cleaned_data.get('comment')
+        if comment_content:
+            post.comments.create(
+                author=post.author,
+                contents=comment_content,
+            )
+
+        # 2. post_list에서 각 Post의 댓글 목록을 출력
         return post
+
+
+class CommentCreateForm(forms.Form):
+    contents = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'forms-control',
+                'rows': 2,
+            }
+        )
+    )
+
+    def save(self, post, **kwargs):
+        contents = self.cleaned_data['contents']
+        return post.comments.create(
+            contents=contents,
+            **kwargs,
+        )

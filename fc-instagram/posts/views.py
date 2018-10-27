@@ -7,8 +7,8 @@ from django.template.loader import get_template
 
 
 # from members.models import User
-from .forms import UploadFileForm
-from posts.models import Post
+from .forms import UploadFileForm, CommentCreateForm
+from .models import Post, Comment
 
 
 def post_list(request):
@@ -17,6 +17,7 @@ def post_list(request):
 
     context = {
         'posts': posts,
+        'comment_form': CommentCreateForm(),
     }
     return HttpResponse(template.render(context, request))
 
@@ -50,3 +51,16 @@ def post_create(request):
 
     context['form'] = form
     return HttpResponse(template.render(context, render))
+
+
+def comment_create(request, post_pk):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_pk)
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            form.save(
+                post=post,
+                author=request.user,
+            )
+            return redirect('posts:post_list')
+

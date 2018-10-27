@@ -72,6 +72,19 @@ class Comment(models.Model):
                     for tag_name in re.findall(self.TAG_PATTERN, self.contents)]
         self.hashtags.set(hashtags)
 
+    @property
+    def html(self):
+        # 자신의 content속성값에서
+        # "#태그명"에 해당하는 문자열을
+        #  아래와 같이 변경
+        #   <a href="/explore/tags/{태그명}>/">#{태그명}</a>
+        # re.sub를 사용
+        return re.sub(
+            self.TAG_PATTERN,
+            r'<a href="/explore/tags/\g<tag>/">#\g<tag></a>',
+            self.contents,
+        )
+
 
 class Hashtags(models.Model):
     tag_name = models.CharField(

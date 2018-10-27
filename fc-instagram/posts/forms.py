@@ -45,25 +45,9 @@ class UploadFileForm(forms.Form):
         return post
 
 
-class CommentCreateForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = [
-            'contents',
-        ]
-        # 원래 템플릿에서 구질구질하게 하던 것들을 이렇게
-        # 깔끔하게 처리할 수 있게 되었다!
-        widgets = {
-            'contents': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': 2,
-                }
-            )
-        }
-
-
-
+class CommentCreateForm(forms.Form):
+    # 원래 템플릿에서 구질구질하게 하던 것들을 이렇게
+    # 깔끔하게 처리할 수 있게 되었다!
     contents = forms.CharField(
         widget=forms.Textarea(
             attrs={
@@ -79,3 +63,45 @@ class CommentCreateForm(forms.ModelForm):
             contents=contents,
             **kwargs,
         )
+
+
+class PostForm(forms.ModelForm):
+    comment = forms.CharField(
+        label='내용',
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'rows': 2,
+            }
+        )
+    )
+
+    class Meta:
+        model = Post
+        fields = [
+            'photo',
+        ]
+        widgets = {
+            'photo': forms.ClearableFileInput(
+                attrs={
+                    'class': 'form-control-file',
+                }
+            )
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            'contents',
+        ]
+        widgets = {
+            'contents': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 2,
+                }
+            )
+        }

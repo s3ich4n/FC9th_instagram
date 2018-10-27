@@ -85,7 +85,7 @@ class RegisterForm(forms.Form):
 
         return data
 
-    def clean(self):
+    def clean_password_confirm(self):
         super().clean()
         password = self.cleaned_data.get('password')
         password_confirm = self.cleaned_data.get('password_confirm')

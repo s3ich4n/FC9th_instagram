@@ -71,12 +71,5 @@ def comment_create(request, post_pk):
             comment.author = request.user
             comment.save()
 
-            # 댓글 저장 후, content에 포함된 Hashtags 목록을
-            # 댓글의 tags 속성에 set한다.
-            p = re.compile(r'#(?P<tag>\w+)')
-            hashtags = [Hashtags.objects.get_or_create(tag_name=tag_name)[0]
-                        for tag_name in re.findall(p, comment.contents)]
-            comment.hashtags.set(hashtags)
-
             return redirect('posts:post_list')
 

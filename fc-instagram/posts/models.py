@@ -1,5 +1,6 @@
 # from django.contrib.auth.models import AbstractUser
 import datetime
+import re
 
 from django.db import models
 from django.conf import settings
@@ -32,6 +33,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    TAG_PATTERN = re.compile(r'#(?P<tag>\w+)')
+
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -60,6 +63,15 @@ class Comment(models.Model):
     #     'User',
     # )
 
+    # 댓글 저장 후, content에 포함된 Hashtags 목록을
+    # 댓글의 tags 속성에 set한다.
+    # 원래 views에 있던걸 save 메소드 overriding으로 해치움.
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        hashtags = [Hashtags.objects.get_or_create(tag_name=tag_name)[0]
+                    for tag_name in re.findall(self.TAG_PATTERN, self.contents)]
+        self.hashtags.set(hashtags)
+
 
 class Hashtags(models.Model):
     tag_name = models.CharField(
@@ -71,3 +83,6 @@ class Hashtags(models.Model):
     def __str__(self):
         return self.tag_name
 
+    class Meta:
+        verbose_name = '해시태그'
+        verbose_name_plural = f'{verbose_name} 목록'

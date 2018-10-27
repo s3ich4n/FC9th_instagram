@@ -1,16 +1,12 @@
-import re
-
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
 
 
 # from members.models import User
-from .models import Post, Comment, Hashtags
-from .forms import UploadFileForm, CommentCreateForm, CommentForm, PostForm
+from .models import Post
+from .forms import CommentForm, PostForm
 
 
 def post_list(request):
@@ -19,7 +15,7 @@ def post_list(request):
 
     context = {
         'posts': posts,
-        'comment_form': CommentCreateForm(),
+        'comment_form': CommentForm(),
     }
     return HttpResponse(template.render(context, request))
 
@@ -73,3 +69,18 @@ def comment_create(request, post_pk):
 
             return redirect('posts:post_list')
 
+
+def tag_post_list(request, tag_name):
+    # 포스트 중, 자신에게 속한 comment 가 가진 Hashtags 목록 중
+    # tag_name이 name인 Hashtags가 포함된
+    # Post 목록을 posts 변수에 할당
+    # context에 담아서 render 수행.
+    # HTML: /posts/tag_post_list.html
+    template = get_template('posts/tag_post_list.html')
+    posts = Post.objects.filter(
+        comments__hashtags__tag_name=tag_name,
+    )
+    context = {
+        'posts': posts,
+    }
+    return HttpResponse(template.render(context, request))

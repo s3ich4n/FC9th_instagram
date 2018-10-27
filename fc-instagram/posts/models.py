@@ -62,7 +62,11 @@ class Comment(models.Model):
 
 
 class Hashtags(models.Model):
-    tag_name = models.CharField(max_length=64)
+    tag_name = models.CharField(
+        '태그명',
+        max_length=64,
+        unique=True,
+    )
 
     def __str__(self):
         return self.tag_name

@@ -28,7 +28,7 @@
     <div id="wrapper">
         <nav class="navbar navbar-expand-sm bg-light">
             <a href="{% url 'posts:post_list' %}" class="navbar-brand">짭스타그램</a>
-            <form action="#" class="form-inline ml-md-auto">
+            <form action="{% url 'posts:tag_search' %}" class="form-inline ml-md-auto">
                 <input type="text" class="form-control" placeholder="검색">
             </form>
             <ul class="navbar-nav ml-md-auto">

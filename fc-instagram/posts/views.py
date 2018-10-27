@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -71,16 +73,27 @@ def comment_create(request, post_pk):
 
 
 def tag_post_list(request, tag_name):
-    # 포스트 중, 자신에게 속한 comment 가 가진 Hashtags 목록 중
+    # 포스트 중, 자신에게 속한 comment 가 가진 '유일한' Hashtags 목록 중
     # tag_name이 name인 Hashtags가 포함된
     # Post 목록을 posts 변수에 할당
     # context에 담아서 render 수행.
     # HTML: /posts/tag_post_list.html
     template = get_template('posts/tag_post_list.html')
     posts = Post.objects.filter(
-        comments__hashtags__tag_name=tag_name,
-    )
+        comments__hashtags__tag_name=tag_name).distinct()
     context = {
         'posts': posts,
     }
     return HttpResponse(template.render(context, request))
+
+
+def tag_search(request):
+    # request.GET으로 전달된
+    #  search_keyword값을 적절히 활용해서
+    #  위의 tag_post_list view로 redirect
+    # URL: '/posts/tag-search/'
+    # URL Name: 'posts:tag-search'
+    # Template: 없음
+    search_keyword = request.GET.get('search_keyword')
+    substituted_keyword = re.sub(r'#|\s+', '', search_keyword)
+    return redirect('tag_post_list', substituted_keyword)

@@ -54,6 +54,9 @@ class Comment(models.Model):
         blank=True,
         verbose_name='해시태그 목록',
     )
+    # Comment의 save()가 호출 될 때,
+    # content의 값을 사용해서 이 필드를 자동으로 채운 후 저장하기
+    _html = models.TextField('태그가 HTML화된 댓글 내용', blank=True)
 
     class Meta:
         verbose_name = '댓글'
@@ -67,10 +70,25 @@ class Comment(models.Model):
     # 댓글의 tags 속성에 set한다.
     # 원래 views에 있던걸 save 메소드 overriding으로 해치움.
     def save(self, *args, **kwargs):
+        def save_html():
+            # 저장하기 전에 _html필드를 채워야 함 (content값을 사용해서)
+            self._html = re.sub(
+                self.TAG_PATTERN,
+                r'<a href="/explore/tags/\g<tag>/">#\g<tag></a>',
+                self.contents,
+            )
+
+        def save_hashtags():
+            # DB에 Comment저장이 완료된 후,
+            #  자신의 'content'값에서 해시태그 목록을 가져와서
+            #  자신의 'tags'속성 (MTM필드)에 할당
+            hashtags = [Hashtags.objects.get_or_create(tag_name=tag_name)[0]
+                        for tag_name in re.findall(self.TAG_PATTERN, self.contents)]
+            self.hashtags.set(hashtags)
+
+        save_html()
         super().save(*args, **kwargs)
-        hashtags = [Hashtags.objects.get_or_create(tag_name=tag_name)[0]
-                    for tag_name in re.findall(self.TAG_PATTERN, self.contents)]
-        self.hashtags.set(hashtags)
+        save_hashtags()
 
     @property
     def html(self):
@@ -79,11 +97,7 @@ class Comment(models.Model):
         #  아래와 같이 변경
         #   <a href="/explore/tags/{태그명}>/">#{태그명}</a>
         # re.sub를 사용
-        return re.sub(
-            self.TAG_PATTERN,
-            r'<a href="/explore/tags/\g<tag>/">#\g<tag></a>',
-            self.contents,
-        )
+        return self._html
 
 
 class Hashtags(models.Model):

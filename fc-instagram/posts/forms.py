@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Post
+from .models import Post, Comment
 
 
 class UploadFileForm(forms.Form):
@@ -45,7 +45,25 @@ class UploadFileForm(forms.Form):
         return post
 
 
-class CommentCreateForm(forms.Form):
+class CommentCreateForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            'contents',
+        ]
+        # 원래 템플릿에서 구질구질하게 하던 것들을 이렇게
+        # 깔끔하게 처리할 수 있게 되었다!
+        widgets = {
+            'contents': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 2,
+                }
+            )
+        }
+
+
+
     contents = forms.CharField(
         widget=forms.Textarea(
             attrs={

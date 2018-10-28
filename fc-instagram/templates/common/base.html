@@ -26,6 +26,7 @@
 </head>
 <body>
     <div id="wrapper">
+        <!-- 내비게이션 바 시작 -->
         <nav class="navbar navbar-expand-sm bg-light">
             <a href="{% url 'posts:post_list' %}" class="navbar-brand">짭스타그램</a>
             <form action="{% url 'posts:tag_search' %}" class="form-inline ml-md-auto">
@@ -35,7 +36,18 @@
                        placeholder="검색">
             </form>
             <ul class="navbar-nav ml-md-auto">
-                <li class="nav-item">
+                <li class="nav-item mr-sm-1">
+                    <a href="{% url 'posts:post_create' %}"
+                       class="btn btn-outline-secondary">포스트하기</a>
+                </li>
+                <li class="nav-item mr-sm-1">
+                    <a href="#" class="btn btn-outline-secondary">Explore</a>
+                </li>
+                <li class="nav-item mr-sm-1">
+                    <a href="#" class="btn btn-outline-secondary">Favorites</a>
+                </li>
+
+                <li class="nav-item mr-sm-1">
                     <a href="#" class="btn btn-outline-secondary">
                         {% if user.is_authenticated %}
                             {{ user.username }}의 프로필
@@ -44,18 +56,25 @@
                         {% endif %}
                     </a>
                 </li>
+
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="{% url 'posts:post_create' %}" class="btn btn-outline-secondary">포스트하기</a>
+                    <form action="{% url 'members:logout_view' %}"
+                          method="POST">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-outline-secondary">로그아웃</button>
+                    </form>
                 </li>
-                <form action="{% url 'members:logout_view' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="btn btn-outline-secondary">로그아웃</button>
-                </form>
                 {% else %}
-                <li class="nav-item"><a href="{% url 'members:login_view' %}" class="btn btn-outline-secondary">로그인</a></li>
-                <li class="nav-item"><a href="{% url 'members:register_view' %}" class="btn btn-outline-secondary">회원가입</a></li>
+                <li class="nav-item mr-sm-1">
+                    <a href="{% url 'members:login_view' %}"
+                       class="btn btn-outline-secondary">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'members:register_view' %}"
+                       class="btn btn-outline-secondary">회원가입</a>
+                </li>
                 {% endif %}
             </ul>
         </nav>

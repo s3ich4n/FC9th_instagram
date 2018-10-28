@@ -42,9 +42,11 @@ def post_create(request):
 
             comment_content = form.cleaned_data['comment']
             if comment_content:
+                # 어떤 모델의 어느 속성에 제대로 바인딩 중인지
+                # 확인하면 올바르게 입력 가능!
                 post.comments.create(
                     author=request.user,
-                    context=comment_content,
+                    contents=comment_content,
                 )
 
             return redirect('posts:post_list')
@@ -55,7 +57,7 @@ def post_create(request):
         form = PostForm()
 
     context['form'] = form
-    return HttpResponse(template.render(context, render))
+    return HttpResponse(template.render(context, request))
 
 
 def comment_create(request, post_pk):

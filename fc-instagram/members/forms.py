@@ -80,20 +80,18 @@ class RegisterForm(forms.Form):
     def clean_username(self):
         data = self.cleaned_data['username']
         if User.objects.filter(username=data).exists():
-            self.fields['username'].widget.attrs['class'] += 'is-invalid'
+            # 띄어쓰기에 유의하기! class에 추가되는 요소이기 때문...
+            self.fields['username'].widget.attrs['class'] += ' is-invalid'
             raise forms.ValidationError('이미 사용중인 사용자명 입니다.')
-
         return data
 
     def clean_password_confirm(self):
-        super().clean()
         password = self.cleaned_data.get('password')
         password_confirm = self.cleaned_data.get('password_confirm')
         if password != password_confirm:
             self.fields['password'].widget.attrs['class'] += ' is-invalid'
             self.fields['password_confirm'].widget.attrs['class'] += ' is-invalid'
             raise forms.ValidationError('비밀번호 값이 서로 일치하지 않습니다.')
-
         return password_confirm
 
     def save(self):

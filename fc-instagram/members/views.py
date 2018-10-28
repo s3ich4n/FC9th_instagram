@@ -7,6 +7,7 @@ from django.template.loader import get_template
 from .forms import LoginForm, RegisterForm, UserProfileForm
 
 
+# https://docs.djangoproject.com/en/2.1/ref/contrib/messages/
 # https://docs.djangoproject.com/en/2.1/topics/auth/default/#authenticating-users
 # https://docs.djangoproject.com/en/2.1/topics/auth/default/#how-to-log-a-user-in
 def login_view(request):

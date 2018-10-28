@@ -1,7 +1,5 @@
 {% extends 'common/base.html' %}
 
-
-
 {% block content %}
 <div>
     <h1 class="text-center">포스트 리스트</h1>
@@ -9,11 +7,19 @@
         <div class="col col-lg-4 offset-lg-4 mb-4">
             <div class="card">
                 <div class="card-header">
-                    {{ post.author }}
+                    <span>
+                        <a href="#">
+                            <!-- 프로필 이미지가 없으면 출력이 안 된다! -->
+                            <!-- 그래서 기본 출력값으로 빈 파일을 넣는 것!-->
+                            <img src="{{ post.author.img_profile.url }}"
+                                 style="width: 30px; height: 30px; border-radius: 100%">
+                        </a>
+                    </span>
+                    <span>{{ post.author }}</span>
                 </div>
                 <div class="card-body">
+                    <img src="{{ post.photo.url }}" class="card-img-top">
 
-                    <img src="{{ post.photo.url }}" alt="">
                     <ul class="list-unstyled">
                         {% for comment in post.comments.all %}
                             <li>
@@ -23,6 +29,7 @@
                         {% endfor %}
                     </ul>
 
+                    <!-- 댓글달기 영역 -->
                     {% if user.is_authenticated %}
                     <form action="{% url 'posts:comment_create' post_pk=post.pk %}" method="POST">
                         {% csrf_token %}

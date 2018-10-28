@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.loader import get_template
 
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, UserProfileForm
 
 
 # https://docs.djangoproject.com/en/2.1/topics/auth/default/#authenticating-users
@@ -51,3 +52,23 @@ def register_view(request):
     # form 렌더링은 이런식으로
     context['form'] = form
     return HttpResponse(template.render(context, request))
+
+
+@login_required
+def profile_view(request):
+    template = get_template('members/profile.html')
+    context = {}
+
+    if request.method == 'POST':
+        form = UserProfileForm(
+            request.POST, request.FILES,
+            instance=request.user,
+        )
+        if form.is_valid():
+            form.save()
+
+    form = UserProfileForm(instance=request.user)
+    context['form'] = form
+
+    return HttpResponse(template.render(context, request))
+

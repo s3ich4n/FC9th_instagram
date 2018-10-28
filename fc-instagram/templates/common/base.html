@@ -48,7 +48,8 @@
                 </li>
 
                 <li class="nav-item mr-sm-1">
-                    <a href="#" class="btn btn-outline-secondary">
+                    <a href="{% url 'members:profile_view' %}"
+                       class="btn btn-outline-secondary">
                         {% if user.is_authenticated %}
                             {{ user.username }}의 프로필
                         {% else %}

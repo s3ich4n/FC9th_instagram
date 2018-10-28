@@ -99,3 +99,13 @@ def tag_search(request):
     search_keyword = request.GET.get('search_keyword')
     substituted_keyword = re.sub(r'#|\s+', '', search_keyword)
     return redirect('tag_post_list', substituted_keyword)
+
+
+def post_like_toggle(request, post_pk):
+    # url: 'posts/<post_pk>/like-toggle/
+    # url name: 'posts:post_like_toggle'
+    # POST 값만 처리함.
+
+    # request.user가 post_pk에 해당하는 Post에 대해
+    # Like toggle 처리를 수행.
+    pass

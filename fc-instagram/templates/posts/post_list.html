@@ -1,9 +1,11 @@
 {% extends 'common/base.html' %}
+{% load static %}
 
 {% block content %}
 <div>
     <h1 class="text-center">포스트 리스트</h1>
     {% for post in posts %}
+        <!--이 div가 lg(width >= 992px)일 때, 4/12의 크기를 가지며 4/12 위치를 기준으로 시작함-->
         <div class="col col-lg-4 offset-lg-4 mb-4">
             <div class="card">
                 <div class="card-header">
@@ -11,7 +13,7 @@
                         <a href="#">
                             <!-- 프로필 이미지가 없으면 출력이 안 된다! -->
                             <!-- 그래서 기본 출력값으로 빈 파일을 넣는 것!-->
-                            <img src="{{ post.author.img_profile.url }}"
+                            <img src="{{ post.author.img_profile_url }}"
                                  style="width: 30px; height: 30px; border-radius: 100%">
                         </a>
                     </span>
@@ -19,6 +21,22 @@
                 </div>
                 <div class="card-body">
                     <img src="{{ post.photo.url }}" class="card-img-top">
+
+                    <form action="post_like_toggle에서 처리">
+                        <!--
+              버튼의 텍스트에
+              현재 user가 이 Post에 좋아요를 누른상태라면 '좋아요해제' 출력
+              버튼 클릭시 post_like_toggle에서 해당 로직 처리
+                        -->
+                        <button class="btn btn-primary"
+                                type="submit">좋아요/좋아요해제</button>
+                    </form>
+
+                    <div>
+                        <span>좋아하는 사람 </span>
+                        <strong>{{ post.like_users.all|join:", " }}</strong>
+                    </div>
+
 
                     <ul class="list-unstyled">
                         {% for comment in post.comments.all %}

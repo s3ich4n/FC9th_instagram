@@ -4,6 +4,7 @@ from django.db import models
 
 from posts.models import PostLike
 
+
 class User(AbstractUser):
     img_profile = models.ImageField(
         '프로필 이미지',

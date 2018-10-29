@@ -2,11 +2,13 @@ import re
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import get_template
 
 
 # from members.models import User
+from django.urls import reverse
+
 from .models import Post
 from .forms import CommentForm, PostForm
 
@@ -108,4 +110,8 @@ def post_like_toggle(request, post_pk):
 
     # request.user가 post_pk에 해당하는 Post에 대해
     # Like toggle 처리를 수행.
-    pass
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_pk)
+        post.like_toggle(request.user)
+        url = reverse('posts:post_list')
+        return redirect(url + f'#post-{post_pk}')

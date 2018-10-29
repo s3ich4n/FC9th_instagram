@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -60,6 +61,7 @@ def profile_view(request):
     template = get_template('members/profile.html')
     context = {}
 
+    # 인스턴스에는 수정할 유저를 인스턴스로 담아서 전달.
     if request.method == 'POST':
         form = UserProfileForm(
             request.POST, request.FILES,
@@ -67,6 +69,10 @@ def profile_view(request):
         )
         if form.is_valid():
             form.save()
+            # https://docs.djangoproject.com/en/2.1/ref/contrib/messages/
+            # is_valid()를 통과하고 인스턴스 수정이 완료되면
+            # messages모듈을 사용해서 템플릿에 수정완료 메시지를 표시
+            messages.success(request, '프로필 수정이 완료되었습니다.')
 
     form = UserProfileForm(instance=request.user)
     context['form'] = form

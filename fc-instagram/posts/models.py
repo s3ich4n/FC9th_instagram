@@ -21,6 +21,11 @@ class Post(models.Model):
         verbose_name='작성자',
     )
 
+    photo = models.ImageField(
+        '사진',
+        upload_to='post',
+    )
+
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='PostLike',
@@ -28,15 +33,15 @@ class Post(models.Model):
         related_query_name='like_post',
     )
 
-    photo = models.ImageField(
-        '사진',
-        upload_to='post',
-    )
-
     class Meta:
         verbose_name = '포스트'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ('-pk',)
+
+    def like_toggle(self, user):
+        postlike, postlike_created = self.postlike_set.get_or_create(user=user)
+        if not postlike_created:
+            postlike.delete()
 
 
 class Comment(models.Model):

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db import models
 
+from posts.models import PostLike
 
 class User(AbstractUser):
     img_profile = models.ImageField(
@@ -34,4 +35,10 @@ class User(AbstractUser):
         return static('img/blank_user.png')
 
     def like_post_toggle(self, post):
-        pass
+        # 자신에게 연결된 PostLike 중,
+        # post값이 매개변수의 post인 PostLike가
+        # 있다면 가져오고 없다면 생성
+        postlike, postlike_created = self.postlike_set.get_or_create(post=post)
+
+        if not postlike_created:
+            postlike.delete()

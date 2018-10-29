@@ -22,6 +22,12 @@
             background-size: cover;
             background-position: center center;
         }
+        .messages-container {
+			position: fixed;
+			top: 10px;
+			left: 10px;
+			width: 300px;
+		}
 	</style>
 </head>
 <body>
@@ -84,6 +90,16 @@
             {% block content %}
             {% endblock %}
         </div>
+
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
     {% block script %}

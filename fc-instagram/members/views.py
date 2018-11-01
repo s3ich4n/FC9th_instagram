@@ -1,15 +1,19 @@
+import imghdr
 import json
 import requests
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.loader import get_template
 
 from .forms import LoginForm, RegisterForm, UserProfileForm
 
+
+User = get_user_model()
 
 # https://docs.djangoproject.com/en/2.1/ref/contrib/messages/
 # https://docs.djangoproject.com/en/2.1/topics/auth/default/#authenticating-users
@@ -84,23 +88,66 @@ def profile_view(request):
 
 
 def facebook_login(request):
-    api_get_access_token = 'https://graph.facebook.com/v3.2/oauth/access_token'
+    api_base = 'https://graph.facebook.com/v3.2/'
+    api_get_access_token = f'{api_base}/oauth/access_token'
+    api_me = f'{api_base}/me'
+
     # request token 저장
     code = request.GET.get('code')
 
     # request token을 access token으로 교환
     params = {
-        'client_id': 1,
-        'redirect_uri': 'http://localhost:8000/members/facebook-login/',
-        'client_secret': '123',
+        'client_id': 123,
+        'redirect_uri': '',
+        'client_secret': 'asdf',
         'code': code,
     }
     response = requests.get(api_get_access_token, params)
-    # 전달한걸 json으로 생각
+    # 전달한 문자열을 json으로 생각
     # json.loads는 전달한게 json이면 문자열 파싱 후 python object 리턴
     # response_object = json.loads(response.text)
     data = response.json()
     access_token = data['access_token']
 
-    # TODO: access_token을 사용하여 사용자 정보 가져오기
-    pass
+    # access token으로 사용자 정보 가져오기.
+    params = {
+        'access_token': access_token,
+        'fields': ','.join([
+            'id',
+            'first_name'
+            'last_name',
+            'picture.type(large)',
+        ]),
+    }
+    response = requests.get(api_me, params)
+    data = response.json()
+
+    facebook_id = data['id']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    url_img_profile = data['picture']['data']['url']
+    # get 요청의 응답으로 바이너리 데이터를 img_data에 할당.
+    img_response = requests.get(url_img_profile)
+    img_data = img_response.content
+
+    ext = imghdr.what('', h=img_data)
+
+    f = SimpleUploadedFile(f'{facebook_id}.{ext}', img_response.content)
+
+    try:
+        user = User.objects.get(username=facebook_id)
+        user.last_name = last_name
+        user.first_name = first_name
+        # user.img_profile = f
+        user.save()
+    except User.DoesNotExist:
+        user = User.objects.create_user(
+            username=facebook_id,
+            first_name=first_name,
+            last_name=last_name,
+            img_profile=f,
+        )
+
+    login(request, user)
+    return redirect('posts:post_list')
+
